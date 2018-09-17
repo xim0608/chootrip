@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv.read_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'recommender',
+    'locations'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +79,12 @@ WSGI_APPLICATION = 'chootrip.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'graduation_research',
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASS'],
+        'HOST': os.environ["DB_HOST"],
+        'PORT': os.environ["DB_PORT"],
     }
 }
 
