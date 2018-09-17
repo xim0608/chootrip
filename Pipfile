@@ -8,6 +8,8 @@ django = "==2.1.1"
 django-dotenv = "*"
 six = "*"
 "psycopg2-binary" = "*"
+gensim = "*"
+nltk = "*"
 
 [dev-packages]
 
