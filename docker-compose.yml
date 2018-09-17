@@ -1,0 +1,37 @@
+version: '3'
+services:
+  app:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/app/Dockerfile
+    volumes:
+      - ./:/app:cached
+      - ./static/:/app/static:cached
+    command: python3 manage.py runserver 0.0.0.0:8000
+    expose:
+      - 8000
+    env_file:
+       - ./.env
+    networks:
+      - gr_network
+    depends_on:
+      - postgresql
+  postgresql:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/db/Dockerfile
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: graduation_research
+    ports:
+      - "5432:5432"
+    container_name: postgres-db
+    volumes:
+      - ./docker/db/data:/var/lib/postgresql/data
+    networks:
+      - gr_network
+networks:
+  gr_network:
