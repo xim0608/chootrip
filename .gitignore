@@ -1,0 +1,36 @@
+.idea/
+client_secret.json
+__pycache__/
+.env
+*.log
+.ipynb_checkpoints/
+
+# matrix numpy objects too large to push to github
+*_matrix.npz
+
+# powerpoint tmp files
+~$*
+
+.DS_Store
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+/static/build/*
+/templates/*
+
+*.sql
+
+**/mysql_data/*
+**/es_data/*
+!.keep
