@@ -85,3 +85,13 @@ class Review(models.Model):
 
     def __str__(self):
         return 'spot={}, title={}'.format(self.spot.title, self.title)
+
+
+class AnalyzedReview(models.Model):
+    class Meta:
+        db_table = 'analyzed_reviews'
+    review = models.OneToOneField(
+        Review,
+        on_delete=models.CASCADE,
+        primary_key=True
+    )
