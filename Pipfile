@@ -5,9 +5,9 @@ name = "pypi"
 
 [packages]
 django = "==2.1.1"
-"psycopg2" = "*"
 django-dotenv = "*"
 six = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 
