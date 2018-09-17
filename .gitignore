@@ -34,3 +34,5 @@ yarn-error.log*
 **/mysql_data/*
 **/es_data/*
 !.keep
+*.json
+**/db/data/*
