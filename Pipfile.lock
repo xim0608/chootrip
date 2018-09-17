@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "77adcd3d3a231588955df07913a5a2fc6707837e8350e97f5d6d77df4b9b1ca7"
+            "sha256": "b33e6c57d3b4b892cf5463692dcba7734b77ba821450672e9740e923a8d4d6c4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -124,6 +124,13 @@
                 "sha256:f11b4461f425740a1d908e9a3f7365c3d2e569f6ca68a2ff8bc5bcd9676edd63"
             ],
             "version": "==0.9.3"
+        },
+        "mecab-python3": {
+            "hashes": [
+                "sha256:1e1b8a34ac63686dcaac19d8eaa2e0c265b679379d10c60ef5c22f571c79ed00"
+            ],
+            "index": "pypi",
+            "version": "==0.7"
         },
         "nltk": {
             "hashes": [

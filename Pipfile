@@ -10,6 +10,7 @@ six = "*"
 "psycopg2-binary" = "*"
 gensim = "*"
 nltk = "*"
+"mecab-python3" = "*"
 
 [dev-packages]
 
