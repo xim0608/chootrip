@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b33e6c57d3b4b892cf5463692dcba7734b77ba821450672e9740e923a8d4d6c4"
+            "sha256": "275e43926d22ecebb55decf149f0088909bab1a78227b11aa3c945c30f28e9f1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -25,17 +25,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:2152e0da8098665e6a03bbbde1de1b4fafdef7151010d1f0e53693a3f2a1deb0",
-                "sha256:323660fd1aa9c95fe90003f44c5fc37cbb891a8b506fa346967d14edcbcb90a4"
+                "sha256:8d3bdfd7405b32040b2323522404f8198c9b5f88edd781a568f995d10c656922",
+                "sha256:9dd7aec0e5abbf16a64d2bf1a2f346aac0534c7d145737608d534de7a57ca8f6"
             ],
-            "version": "==1.9.4"
+            "version": "==1.9.5"
         },
         "botocore": {
             "hashes": [
-                "sha256:3b2cab368572ee987a6236321ddea491e4253c819009c87ebc9e42e60371e3ae",
-                "sha256:7834eba53c6bedea21eb76f25a39e477dede3a24aeb51ff19c0248ea8348f007"
+                "sha256:71b7b01e186731c459b2d85efc3168668f30a1a6998a169526dbb12c321660ce",
+                "sha256:f2282ef08f355c8b81ba539375e98ab5345fa2569644f1aeb361ee4c6cc60bc4"
             ],
-            "version": "==1.12.4"
+            "version": "==1.12.5"
         },
         "bz2file": {
             "hashes": [
@@ -277,6 +277,13 @@
             ],
             "index": "pypi",
             "version": "==1.11.0"
+        },
+        "slackweb": {
+            "hashes": [
+                "sha256:bb64f1f8fea99fc04ce8fb300a09aab8fe51d86e25cedafb1eaca07f7b828c36"
+            ],
+            "index": "pypi",
+            "version": "==1.0.5"
         },
         "smart-open": {
             "hashes": [

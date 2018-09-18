@@ -11,6 +11,7 @@ six = "*"
 gensim = "*"
 nltk = "*"
 "mecab-python3" = "*"
+slackweb = "*"
 
 [dev-packages]
 
