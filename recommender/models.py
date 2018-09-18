@@ -2,11 +2,13 @@ from django.db import models
 from locations.models import City
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.postgres.fields import ArrayField
 
 
 class Spot(models.Model):
     class Meta:
         db_table = 'spots'
+
     base_id = models.CharField(max_length=200, null=True, blank=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     url = models.CharField(max_length=200, unique=True)
@@ -62,6 +64,7 @@ def create_spot(sender, instance, created, **kwargs):
 class SpotImage(models.Model):
     class Meta:
         db_table = 'spot_images'
+
     spot = models.ForeignKey(Spot, on_delete=models.CASCADE)
     url = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
@@ -75,6 +78,7 @@ class SpotImage(models.Model):
 class Review(models.Model):
     class Meta:
         db_table = 'reviews'
+
     username = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -90,8 +94,14 @@ class Review(models.Model):
 class AnalyzedReview(models.Model):
     class Meta:
         db_table = 'analyzed_reviews'
+
     review = models.OneToOneField(
         Review,
         on_delete=models.CASCADE,
         primary_key=True
     )
+    mecab_neologd = ArrayField(
+        ArrayField(
+            models.CharField(max_length=255, default=None)
+            , blank=True)
+        , blank=True, null=True)
