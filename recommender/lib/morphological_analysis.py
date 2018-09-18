@@ -1,6 +1,7 @@
 from recommender.models import Review, AnalyzedReview
 from recommender.lib.preprocess.normalization_neologd import normalize_neologd
 import MeCab
+from recommender.lib.notifications import Slack
 
 
 class Analysis:
@@ -46,7 +47,8 @@ class AnalysisJuman(Analysis):
         self.jumanpp = Jumanpp()
 
     def analysis_and_save(self):
-        for review in self.reviews:
+        num_of_reviews = self.reviews.count()
+        for i, review in enumerate(self.reviews):
             input_data = self.concat_title_and_content(review.title, review.content)
             tokens = []
             try:
@@ -63,3 +65,7 @@ class AnalysisJuman(Analysis):
             a_r = AnalyzedReview.objects.get(review_id=review.id)
             a_r.jumanpp = tokens
             a_r.save()
+
+            if i % 10 == 0:
+                Slack.notify("count: {}/{}".format(i, num_of_reviews))
+
