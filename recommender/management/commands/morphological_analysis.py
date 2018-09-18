@@ -15,6 +15,8 @@ class Command(BaseCommand):
         start = time.time()
         if options['method'] == 'mecab':
             AnalysisMecab().analysis_and_save()
+        elif options['method'] == 'jumanpp':
+            AnalysisJuman().analysis_and_save()
 
         elapsed_time = time.time() - start
         print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

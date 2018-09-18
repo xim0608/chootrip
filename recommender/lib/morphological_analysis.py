@@ -6,6 +6,7 @@ import MeCab
 class Analysis:
     def __init__(self, reviews=Review.objects.all()):
         self.reviews = reviews
+        print("Review Count: {}".format(reviews.count()))
 
     @classmethod
     def concat_title_and_content(cls, title, content):
@@ -16,14 +17,12 @@ class Analysis:
 
 
 class AnalysisMecab(Analysis):
-    def __init__(self, reviews=Review.objects.all()):
+    def __init__(self, reviews=Review.objects.filter(analyzedreview__mecab_neologd__isnull=True)):
         super().__init__(reviews)
         self.mecab = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
 
     def analysis_and_save(self):
         for review in self.reviews:
-            if len(AnalyzedReview.objects.filter(review_id=review.id)) > 0:
-                continue
             content = normalize_neologd(review.content)
             title = normalize_neologd(review.title)
             input_data = self.concat_title_and_content(title, content)
@@ -37,4 +36,25 @@ class AnalysisMecab(Analysis):
                     tokens.append(token)
                 node = node.next
             a_r = AnalyzedReview(review_id=review.id, mecab_neologd=tokens)
+            a_r.save()
+
+
+class AnalysisJuman(Analysis):
+    def __init__(self, reviews=Review.objects.filter(analyzedreview__jumanpp__isnull=True)):
+        super().__init__(reviews)
+        from pyknp import Jumanpp
+        self.jumanpp = Jumanpp()
+
+    def analysis_and_save(self):
+        for review in self.reviews:
+            input_data = self.concat_title_and_content(review.title, review.content)
+            tokens = []
+            result = self.jumanpp.analysis(input_data)
+            for mrph in result.mrph_list():
+                tokens.append(
+                    [mrph.midasi, mrph.yomi, mrph.genkei, mrph.hinsi, mrph.bunrui,
+                     mrph.katuyou1, mrph.katuyou2, mrph.imis, mrph.repname]
+                )
+            a_r = AnalyzedReview.objects.get(review_id=review.id)
+            a_r.jumanpp = tokens
             a_r.save()
