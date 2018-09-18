@@ -105,3 +105,8 @@ class AnalyzedReview(models.Model):
             models.CharField(max_length=255, default=None)
             , blank=True)
         , blank=True, null=True)
+    jumanpp = ArrayField(
+        ArrayField(
+            models.CharField(max_length=255, default=None)
+            , blank=True)
+        , blank=True, null=True)
