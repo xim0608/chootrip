@@ -49,7 +49,12 @@ class AnalysisJuman(Analysis):
         for review in self.reviews:
             input_data = self.concat_title_and_content(review.title, review.content)
             tokens = []
-            result = self.jumanpp.analysis(input_data)
+            try:
+                result = self.jumanpp.analysis(input_data)
+            except ValueError:
+                result = self.jumanpp.analysis(input_data.replace(' ', '　'))
+                print('value error replacing space')
+
             for mrph in result.mrph_list():
                 tokens.append(
                     [mrph.midasi, mrph.yomi, mrph.genkei, mrph.hinsi, mrph.bunrui,
