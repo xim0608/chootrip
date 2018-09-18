@@ -66,6 +66,5 @@ class AnalysisJuman(Analysis):
             a_r.jumanpp = tokens
             a_r.save()
 
-            if i % 10 == 0:
+            if i % 1000 == 0:
                 Slack.notify("count: {}/{}".format(i, num_of_reviews))
-
