@@ -23,7 +23,8 @@ class AnalysisMecab(Analysis):
         self.mecab = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
 
     def analysis_and_save(self):
-        for review in self.reviews:
+        num_of_reviews = self.reviews.count()
+        for i, review in enumerate(self.reviews):
             content = normalize_neologd(review.content)
             title = normalize_neologd(review.title)
             input_data = self.concat_title_and_content(title, content)
@@ -32,12 +33,17 @@ class AnalysisMecab(Analysis):
             while node:
                 token = node.feature.split(',')
                 if len(token) != 9:
-                    print("error token in {}".format(token))
+                    # print("error token in {}".format(token))
+                    pass
                 else:
                     tokens.append(token)
                 node = node.next
-            a_r = AnalyzedReview(review_id=review.id, mecab_neologd=tokens)
-            a_r.save()
+            AnalyzedReview.objects.update_or_create(
+                review_id=review.id, defaults={'mecab_neologd': tokens}
+            )
+
+            if i % 1000 == 0:
+                Slack.notify("count: {}/{}".format(i, num_of_reviews))
 
 
 class AnalysisJuman(Analysis):
@@ -55,16 +61,19 @@ class AnalysisJuman(Analysis):
                 result = self.jumanpp.analysis(input_data)
             except ValueError:
                 result = self.jumanpp.analysis(input_data.replace(' ', '　'))
-                print('value error replacing space')
+            except Exception:
+                print("skip id: {}".format(review.id))
+                continue
 
             for mrph in result.mrph_list():
                 tokens.append(
                     [mrph.midasi, mrph.yomi, mrph.genkei, mrph.hinsi, mrph.bunrui,
                      mrph.katuyou1, mrph.katuyou2, mrph.imis, mrph.repname]
                 )
-            a_r = AnalyzedReview.objects.get(review_id=review.id)
-            a_r.jumanpp = tokens
-            a_r.save()
+            AnalyzedReview.objects.update_or_create(
+                review_id=review.id,
+                defaults={'jumanpp': tokens}
+            )
 
             if i % 1000 == 0:
                 Slack.notify("count: {}/{}".format(i, num_of_reviews))
