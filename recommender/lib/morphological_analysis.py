@@ -43,7 +43,7 @@ class AnalysisMecab(Analysis):
             )
 
             if i % 1000 == 0:
-                Slack.notify("count: {}/{}".format(i, num_of_reviews))
+                Slack.notify("mecab count: {}/{}".format(i, num_of_reviews))
 
 
 class AnalysisJuman(Analysis):
@@ -76,4 +76,4 @@ class AnalysisJuman(Analysis):
             )
 
             if i % 1000 == 0:
-                Slack.notify("count: {}/{}".format(i, num_of_reviews))
+                Slack.notify("jumanpp count: {}/{}".format(i, num_of_reviews))
