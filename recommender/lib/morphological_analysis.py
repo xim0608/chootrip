@@ -23,7 +23,7 @@ class AnalysisMecab(Analysis):
         self.mecab = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
 
     def analysis_and_save(self):
-        num_of_reviews = self.reviews.count()
+        # num_of_reviews = self.reviews.count()
         for i, review in enumerate(self.reviews):
             content = normalize_neologd(review.content)
             title = normalize_neologd(review.title)
@@ -43,7 +43,7 @@ class AnalysisMecab(Analysis):
             )
 
             if i % 1000 == 0:
-                Slack.notify("mecab count: {}/{}".format(i, num_of_reviews))
+                Slack.notify("mecab count: {}".format(i))
 
 
 class AnalysisJuman(Analysis):
@@ -53,7 +53,7 @@ class AnalysisJuman(Analysis):
         self.jumanpp = Jumanpp()
 
     def analysis_and_save(self):
-        num_of_reviews = self.reviews.count()
+        # num_of_reviews = self.reviews.count()
         for i, review in enumerate(self.reviews):
             input_data = self.concat_title_and_content(review.title, review.content)
             tokens = []
@@ -76,4 +76,4 @@ class AnalysisJuman(Analysis):
             )
 
             if i % 1000 == 0:
-                Slack.notify("jumanpp count: {}/{}".format(i, num_of_reviews))
+                Slack.notify("jumanpp count: {}".format(i))
