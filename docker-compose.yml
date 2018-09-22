@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: graduation_research
     ports:
-      - "5432:5432"
+      - "54321:5432"
     container_name: postgres-db
     volumes:
       - ./docker/db/data:/var/lib/postgresql/data
