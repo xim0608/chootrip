@@ -12,7 +12,7 @@ services:
       resources:
         limits:
           memory: 11G
-        resevation:
+        reservations:
           memory: 10G
     expose:
       - 8000
