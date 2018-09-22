@@ -1,7 +1,6 @@
 version: '3'
 services:
   batch:
-    restart: always
     build:
       context: ./
       dockerfile: ./docker/app/Dockerfile
@@ -9,6 +8,12 @@ services:
       - ./:/app:cached
       - ./static/:/app/static:cached
     command: python3 manage.py runserver 0.0.0.0:8000
+    deploy:
+      resources:
+        limits:
+          memory: 11G
+        resevation:
+          memory: 10G
     expose:
       - 8000
     env_file:
