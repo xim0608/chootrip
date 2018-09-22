@@ -13,3 +13,12 @@ services:
       - 8000
     env_file:
        - ./.env
+    depends_on:
+      - db
+  db:
+    image: "gcr.io/cloudsql-docker/gce-proxy:1.09"
+    command:
+      ["/cloud_sql_proxy",
+      "-instances=${INSTANCE_NAME}=tcp:0.0.0.0:5432"]
+    ports:
+      - "5432:5432"
