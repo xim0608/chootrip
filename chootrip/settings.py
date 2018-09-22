@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'chootrip.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'graduation_research',
+        'NAME': os.environ['DB_NAME'],
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['DB_PASS'],
         'HOST': os.environ["DB_HOST"],
