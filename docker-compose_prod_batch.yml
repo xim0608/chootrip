@@ -29,5 +29,7 @@ services:
       "-instances=${INSTANCE_NAME}=tcp:0.0.0.0:5432"]
     ports:
       - "5432:5432"
+    networks:
+      - gr_network
 networks:
   gr_network:
