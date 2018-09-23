@@ -1,6 +1,7 @@
 version: '3'
 services:
   batch:
+    mem_limit: 10gb
     build:
       context: ./
       dockerfile: ./docker/app/Dockerfile
@@ -8,18 +9,18 @@ services:
       - ./:/app:cached
       - ./static/:/app/static:cached
     command: python3 manage.py runserver 0.0.0.0:8000
-    deploy:
-      resources:
-        limits:
-          memory: 11G
-        reservations:
-          memory: 10G
     expose:
       - 8000
     env_file:
        - ./.env
     depends_on:
       - db
+  juman-api:
+    image: gkmr/jumanpp-api
+    ports:
+      - "4567:4567"
+    networks:
+      - gr_network
   db:
     image: "gcr.io/cloudsql-docker/gce-proxy:1.09"
     command:
