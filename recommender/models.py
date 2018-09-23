@@ -100,12 +100,22 @@ class AnalyzedReview(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
-    mecab_neologd = ArrayField(
+    neologd_title = ArrayField(
         ArrayField(
             models.CharField(max_length=255, default=None)
             , blank=True)
         , blank=True, null=True)
-    jumanpp = ArrayField(
+    neologd_content = ArrayField(
+        ArrayField(
+            models.CharField(max_length=255, default=None)
+            , blank=True)
+        , blank=True, null=True)
+    jumanpp_title = ArrayField(
+        ArrayField(
+            models.CharField(max_length=255, default=None)
+            , blank=True)
+        , blank=True, null=True)
+    jumanpp_content = ArrayField(
         ArrayField(
             models.CharField(max_length=255, default=None)
             , blank=True)
