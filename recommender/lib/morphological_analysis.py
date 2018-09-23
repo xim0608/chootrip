@@ -5,9 +5,8 @@ from recommender.lib.notifications import Slack
 
 
 class Analysis:
-    def __init__(self, reviews=Review.objects.all()):
-        self.reviews = reviews
-        print("Review Count: {}".format(reviews.count()))
+    def __init__(self, reviews_id=Review.objects.all().values('id')):
+        self.reviews_id = reviews_id
 
     @classmethod
     def concat_title_and_content(cls, title, content):
@@ -18,13 +17,14 @@ class Analysis:
 
 
 class AnalysisMecab(Analysis):
-    def __init__(self, reviews=Review.objects.filter(analyzedreview__mecab_neologd__isnull=True)):
-        super().__init__(reviews)
+    def __init__(self, reviews_id=Review.objects.filter(analyzedreview__mecab_neologd__isnull=True).values('id')):
+        super().__init__(reviews_id)
         self.mecab = MeCab.Tagger('-d /usr/local/lib/mecab/dic/mecab-ipadic-neologd')
 
     def analysis_and_save(self):
-        # num_of_reviews = self.reviews.count()
-        for i, review in enumerate(self.reviews):
+        counter = 0
+        for review_id in self.reviews_id:
+            review = Review.objects.get(id=review_id)
             content = normalize_neologd(review.content)
             title = normalize_neologd(review.title)
             input_data = self.concat_title_and_content(title, content)
@@ -42,8 +42,9 @@ class AnalysisMecab(Analysis):
                 review_id=review.id, defaults={'mecab_neologd': tokens}
             )
 
-            if i % 1000 == 0:
-                Slack.notify("mecab count: {}".format(i))
+            counter += 1
+            if counter % 1000 == 0:
+                Slack.notify("mecab count: {}".format(counter))
 
 
 class AnalysisJuman(Analysis):
