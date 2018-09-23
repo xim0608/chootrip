@@ -11,4 +11,4 @@ WORKDIR /app
 
 RUN pipenv install --system --deploy --ignore-pipfile
 
-CMD ["python", "main.py"]
+ENTRYPOINT ["python", "main.py"]
