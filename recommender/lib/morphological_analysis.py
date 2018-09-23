@@ -24,7 +24,7 @@ class AnalysisMecab(Analysis):
     def analysis_and_save(self):
         counter = 0
         for review_id in self.reviews_id:
-            review = Review.objects.get(id=review_id)
+            review = Review.objects.get(id=review_id['id'])
             content = normalize_neologd(review.content)
             title = normalize_neologd(review.title)
             input_data = self.concat_title_and_content(title, content)
