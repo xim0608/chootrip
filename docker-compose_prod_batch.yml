@@ -18,8 +18,6 @@ services:
     image: gkmr/jumanpp-api
     ports:
       - "4567:4567"
-    networks:
-      - gr_network
   db:
     image: "gcr.io/cloudsql-docker/gce-proxy:1.09"
     command:
