@@ -14,10 +14,14 @@ services:
        - ./.env
     depends_on:
       - db
+    networks:
+      - gr_network
   juman-api:
     image: gkmr/jumanpp-api
     ports:
       - "4567:4567"
+    networks:
+      - gr_network
   db:
     image: "gcr.io/cloudsql-docker/gce-proxy:1.09"
     command:
@@ -25,3 +29,5 @@ services:
       "-instances=${INSTANCE_NAME}=tcp:0.0.0.0:5432"]
     ports:
       - "5432:5432"
+networks:
+  gr_network:
