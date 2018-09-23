@@ -84,24 +84,14 @@ class AnalysisJuman(Analysis):
             payload = {'string': title}
             title_res = requests.post('http://juman-api:4567/parse', data=payload)
 
-
-            # try:
-            #     result = self.jumanpp.analysis(input_data)
-            # except ValueError:
-            #     result = self.jumanpp.analysis(input_data.replace(' ', '　'))
-            # except Exception:
-            #     print("skip id: {}".format(review.id))
-            #     continue
-            #
-            # for mrph in result.mrph_list():
-            #     tokens.append(
-            #         [mrph.midasi, mrph.yomi, mrph.genkei, mrph.hinsi, mrph.bunrui,
-            #          mrph.katuyou1, mrph.katuyou2, mrph.imis, mrph.repname]
-            #     )
-            AnalyzedReview.objects.update_or_create(
-                review_id=review.id,
-                defaults={'jumanpp_content': content_res.json()['results'], 'jumanpp_title': title_res.json()['results']}
-            )
+            try:
+                AnalyzedReview.objects.update_or_create(
+                    review_id=review.id,
+                    defaults={'jumanpp_content': content_res.json()['results'], 'jumanpp_title': title_res.json()['results']}
+                )
+            except Exception:
+                print("skip record review id: {}".format(review.id))
+                continue
 
             if counter % 1000 == 0:
                 Slack.notify("jumanpp count: {}".format(counter))
