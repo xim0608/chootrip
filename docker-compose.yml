@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   app:
     restart: always
@@ -17,6 +17,12 @@ services:
       - gr_network
     depends_on:
       - postgresql
+  juman-api:
+    image: gkmr/jumanpp-api
+    ports:
+      - "4567:4567"
+    networks:
+      - gr_network
   postgresql:
     restart: always
     build:
