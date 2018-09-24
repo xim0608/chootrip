@@ -8,7 +8,7 @@ services:
     volumes:
       - ./:/app:cached
       - ./static/:/app/static:cached
-    command: ["tail","-f","/dev/null"]
+    command: ["runserver", "0.0.0.0:8000"]
     expose:
       - 8000
     env_file:
