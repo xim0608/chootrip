@@ -29,7 +29,7 @@ class Command(BaseCommand):
                     remain = int(remain)
                     mod = int(mod)
                     reviews_id = Review.objects.annotate(
-                        idmod=F('review_id') % mod
+                        idmod=F('id') % mod
                     ).filter(analyzedreview__jumanpp_content__isnull=True, idmod=remain).values('id')
                     AnalysisJuman(reviews_id=reviews_id).analysis_and_save()
                 else:
