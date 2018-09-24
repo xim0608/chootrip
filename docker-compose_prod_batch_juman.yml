@@ -22,12 +22,16 @@ services:
     image: gkmr/jumanpp-api
     networks:
       - gr_network
+    ports:
+      - '4567'
   juman-api:
     image: "dockercloud/haproxy:latest"
     links:
       - juman-api-back-end
     ports:
       - "4567:4567"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - gr_network
   db:
