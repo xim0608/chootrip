@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from recommender.lib.morphological_analysis import *
 import time
 from socket import gethostname
+from django.db.models import F
 
 
 class Command(BaseCommand):
@@ -9,8 +10,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--method', dest='method', required=False,
+            '--method', dest='method', required=True,
             help='nlp method type',
+        )
+        parser.add_argument(
+            '--q', dest='mod_filter', required=False,
+            help='nlp method query',
         )
 
     def handle(self, *args, **options):
@@ -19,7 +24,16 @@ class Command(BaseCommand):
             if options['method'] == 'mecab':
                 AnalysisMecab().analysis_and_save()
             elif options['method'] == 'jumanpp':
-                AnalysisJuman().analysis_and_save()
+                if options['mod_filter']:
+                    remain, mod = options['mod_filter'].split('/')
+                    remain = int(remain)
+                    mod = int(mod)
+                    reviews_id = Review.objects.annotate(
+                        idmod=F('review_id') % mod
+                    ).filter(analyzedreview__jumanpp_content__isnull=True, idmod=remain).values('id')
+                    AnalysisJuman(reviews_id=reviews_id).analysis_and_save()
+                else:
+                    AnalysisJuman().analysis_and_save()
         except Exception as e:
             import traceback
             from recommender.lib.notifications import Slack
