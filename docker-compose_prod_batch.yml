@@ -8,18 +8,13 @@ services:
     volumes:
       - ./:/app:cached
       - ./static/:/app/static:cached
+    command: ["tail","-f","/dev/null"]
     expose:
       - 8000
     env_file:
        - ./.env
     depends_on:
       - db
-    networks:
-      - gr_network
-  juman-api:
-    image: gkmr/jumanpp-api
-    ports:
-      - "4567:4567"
     networks:
       - gr_network
   db:
