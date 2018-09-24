@@ -18,8 +18,14 @@ services:
       - juman-api
     networks:
       - gr_network
-  juman-api:
+  juman-api-back-end:
     image: gkmr/jumanpp-api
+    networks:
+      - gr_network
+  juman-api:
+    image: "dockercloud/haproxy:latest"
+    links:
+      - juman-api-back-end
     ports:
       - "4567:4567"
     networks:
