@@ -3,6 +3,7 @@ from recommender.lib.preprocess.normalization_neologd import normalize_neologd
 import MeCab
 from recommender.lib.notifications import Slack
 import requests
+from socket import gethostname
 
 
 class Analysis:
@@ -59,7 +60,7 @@ class AnalysisMecab(Analysis):
             )
 
             if counter % 1000 == 0:
-                Slack.notify("mecab count: {}".format(counter))
+                Slack.notify("mecab count: {}, host: {}".format(counter, gethostname()))
             counter += 1
 
 
@@ -94,5 +95,5 @@ class AnalysisJuman(Analysis):
                 continue
 
             if counter % 1000 == 0:
-                Slack.notify("jumanpp count: {}".format(counter))
+                Slack.notify("jumanpp count: {}, host: {}".format(counter, gethostname()))
             counter += 1
