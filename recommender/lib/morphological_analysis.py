@@ -79,11 +79,11 @@ class AnalysisJuman(Analysis):
 
             # content
             payload = {'string': content}
-            content_res = requests.post('http://juman-api:4567/parse', data=payload)
+            content_res = requests.post('http://juman-api/parse', data=payload)
 
             # title
             payload = {'string': title}
-            title_res = requests.post('http://juman-api:4567/parse', data=payload)
+            title_res = requests.post('http://juman-api/parse', data=payload)
 
             try:
                 AnalyzedReview.objects.update_or_create(
