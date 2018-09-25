@@ -67,8 +67,6 @@ class AnalysisMecab(Analysis):
 class AnalysisJuman(Analysis):
     def __init__(self, reviews_id=Review.objects.filter(analyzedreview__jumanpp_content__isnull=True).values('id')):
         super().__init__(reviews_id)
-        from pyknp import Jumanpp
-        self.jumanpp = Jumanpp()
 
     def analysis_and_save(self):
         counter = 0
