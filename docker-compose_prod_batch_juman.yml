@@ -1,7 +1,6 @@
 version: '2'
 services:
   batch:
-    mem_limit: 8gb
     build:
       context: ./
       dockerfile: ./docker/app/Dockerfile
