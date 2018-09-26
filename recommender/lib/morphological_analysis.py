@@ -88,8 +88,9 @@ class AnalysisJuman(Analysis):
                     review_id=review.id,
                     defaults={'jumanpp_content': content_res.json()['results'], 'jumanpp_title': title_res.json()['results']}
                 )
-            except Exception:
+            except Exception as e:
                 print("skip record review id: {}".format(review.id))
+                print(e)
                 continue
 
             if counter % 1000 == 0:
