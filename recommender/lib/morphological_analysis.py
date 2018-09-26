@@ -76,11 +76,11 @@ class AnalysisJuman(Analysis):
             title = normalize_neologd(review.title)
 
             # content
-            payload = {'string': content}
+            payload = {'string': content.replace('\\', '')}
             content_res = requests.post('http://juman-api/parse', data=payload)
 
             # title
-            payload = {'string': title}
+            payload = {'string': title.replace('\\', '')}
             title_res = requests.post('http://juman-api/parse', data=payload)
 
             try:
