@@ -4,6 +4,23 @@ import MeCab
 from recommender.lib.notifications import Slack
 import requests
 from socket import gethostname
+import re
+
+
+def include_num(word):
+    if re.search('[0-9]', word):
+        return True
+    return False
+
+
+def extract_neologd_word(review):
+    spot_words = []
+    for node_with_feature in review.neologd_title + review.neologd_content:
+        if node_with_feature[0] == '名詞':
+            if node_with_feature[1] == '一般' or node_with_feature[1] == 'サ変接続' or \
+                    (node_with_feature[1] == '固有名詞' and not include_num(node_with_feature[6]) and not node_with_feature[2] == '人名' and not node_with_feature[2] == '地域'):
+                spot_words.append(node_with_feature[6])
+    return spot_words
 
 
 class Analysis:
@@ -76,17 +93,28 @@ class AnalysisJuman(Analysis):
             title = normalize_neologd(review.title)
 
             # content
-            payload = {'string': content.replace('\\', '')}
-            content_res = requests.post('http://juman-api/parse', data=payload)
+            replaced_content = content.replace('\\', '')
+            if replaced_content:
+                payload = {'string': replaced_content}
+                content_res = requests.post('http://juman-api/parse', data=payload)
+                jumanpp_content = content_res.json()['results']
+            else:
+                jumanpp_content = []
 
             # title
-            payload = {'string': title.replace('\\', '')}
-            title_res = requests.post('http://juman-api/parse', data=payload)
+            replaced_title = title.replace('\\', '')
+            if replaced_title:
+                payload = {'string': replaced_title}
+                title_res = requests.post('http://juman-api/parse', data=payload)
+                jumanpp_title = title_res.json()['results']
+            else:
+                jumanpp_title = []
 
             try:
                 AnalyzedReview.objects.update_or_create(
                     review_id=review.id,
-                    defaults={'jumanpp_content': content_res.json()['results'], 'jumanpp_title': title_res.json()['results']}
+                    defaults={'jumanpp_content': jumanpp_content,
+                              'jumanpp_title': jumanpp_title}
                 )
             except Exception as e:
                 print("skip record review id: {}".format(review.id))

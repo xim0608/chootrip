@@ -100,6 +100,9 @@ class AnalyzedReview(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
+
+    # array[0]: 品詞, array[1]: 品詞細分類1, array[2]: 品詞細分類2, array[3]: 品詞細分類3, array[4]: 活用形,
+    # array[5]: 活用型, array[6]: 原形, array[7]: 読み, array[8]: 発音
     neologd_title = ArrayField(
         ArrayField(
             models.CharField(max_length=255, default=None)
@@ -120,3 +123,8 @@ class AnalyzedReview(models.Model):
             models.CharField(max_length=255, default=None)
             , blank=True)
         , blank=True, null=True)
+
+    def _neologd_nouns(self):
+        return [word for word in self.neologd_title + self.neologd_content if word[0] == '名詞']
+
+    neologd_nouns = property(_neologd_nouns)
