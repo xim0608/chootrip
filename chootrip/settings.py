@@ -151,7 +151,7 @@ SHELL_PLUS = "ipython"
 
 NOTEBOOK_ARGUMENTS = [
     '--ip=0.0.0.0',
-    '--port=80',
+    '--port=' + os.environ["JUPYTER_PORT"],
     '--no-browser',
     '--notebook-dir', "./notebooks"
 ]
