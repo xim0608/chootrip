@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from recommender.lib.morphological_analysis import *
+from recommender.models import Review
+from recommender.lib.morphological_analysis import AnalysisMecab, AnalysisJuman
 import time
 from socket import gethostname
 from django.db.models import F
