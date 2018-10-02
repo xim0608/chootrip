@@ -10,7 +10,7 @@ from django.conf import settings
 class TopicModel:
     def __init__(self, num_topics, created_at=datetime.now()):
         self.created_at = created_at
-        self.dir = settings.BASE_DIR + "files/topic_model/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
+        self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
         if os.path.isdir(self.dir):
             # TODO: load existing model files
             self.corpus = None
