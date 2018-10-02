@@ -36,3 +36,5 @@ yarn-error.log*
 !.keep
 *.json
 **/db/data/*
+
+**/lib/files/topic_model/**
