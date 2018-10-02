@@ -14,6 +14,9 @@ nltk = "*"
 slackweb = "*"
 
 [dev-packages]
+django-extensions = "*"
+jupyter = "*"
+ipython = "==6.5.0"
 
 [requires]
 python_version = "3.6"

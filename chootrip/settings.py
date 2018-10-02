@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'recommender',
     'locations'
 ]
@@ -145,3 +146,12 @@ LOGGING = {
 }
 
 SLACK_WEBHOOK_URL = os.environ['SLACK_WEBHOOK_URL']
+
+SHELL_PLUS = "ipython"
+
+NOTEBOOK_ARGUMENTS = [
+    '--ip=0.0.0.0',
+    '--port=80',
+    '--no-browser',
+    '--notebook-dir', "./notebooks"
+]
