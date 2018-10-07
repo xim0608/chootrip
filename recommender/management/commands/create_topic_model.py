@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 import time
 from socket import gethostname
 from datetime import datetime
-from recommender.lib.topic_model import TopicModel
+from recommender.lib.models import TopicModel, Corpus
 
 
 class Command(BaseCommand):
@@ -10,7 +10,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--created_at', dest='created_at', required=False,
+            '--topic-model', dest='topic_model_created_at', required=False,
+            help='model created_at',
+        )
+        parser.add_argument(
+            '--corpus', dest='corpus_created_at', required=False,
             help='model created_at',
         )
         parser.add_argument(
@@ -21,11 +25,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         start = time.time()
         try:
-            if options['created_at']:
-                created_at = datetime.strptime(options['created_at'], '%Y%m%d%H%M%S')
+            if options['topic_model_created_at']:
+                created_at = datetime.strptime(options['topic_model_created_at'], '%Y%m%d%H%M%S')
                 TopicModel(num_topics=options['num_topics'], created_at=created_at)
             else:
-                TopicModel(num_topics=options['num_topics'])
+                if options['corpus_created_at']:
+                    created_at = datetime.strptime(options['topic_model_created_at'], '%Y%m%d%H%M%S')
+                    corpus = Corpus(created_at=created_at)
+                    TopicModel(num_topics=options['num_topics'], corpus=corpus)
+                else:
+                    TopicModel(num_topics=options['num_topics'], corpus=Corpus())
         except Exception as e:
             import traceback
             from recommender.lib.notifications import Slack
