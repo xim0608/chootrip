@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 TopicModel(num_topics=options['num_topics'], created_at=created_at)
             else:
                 if options['corpus_created_at']:
-                    created_at = datetime.strptime(options['topic_model_created_at'], '%Y%m%d%H%M%S')
+                    created_at = datetime.strptime(options['corpus_created_at'], '%Y%m%d%H%M%S')
                     corpus = Corpus(created_at=created_at)
                     TopicModel(num_topics=options['num_topics'], corpus=corpus)
                 else:
