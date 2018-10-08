@@ -12,6 +12,10 @@ gensim = "*"
 nltk = "*"
 "mecab-python3" = "*"
 slackweb = "*"
+pandas = "*"
+matplotlib = "*"
+seaborn = "*"
+numpy = "*"
 
 [dev-packages]
 django-extensions = "*"
