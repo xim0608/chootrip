@@ -38,3 +38,5 @@ yarn-error.log*
 **/db/data/*
 
 **/lib/files/topic_model/**
+**/lib/files/corpus/**
+**/lib/files/documents/**
