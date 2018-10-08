@@ -55,11 +55,11 @@ class Corpus:
 
 
 class TopicModel:
-    def __init__(self, num_topics, corpus, created_at=datetime.now()):
+    def __init__(self, num_topics, corpus=None, created_at=datetime.now()):
         self.created_at = created_at
         self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
-        self.corpus = corpus.corpus
-        self.dict = corpus.dict
+        self.corpus = corpus
+        self.dict = None
         self.lda = None
         if os.path.isdir(self.dir):
             self.load_exist_models()
@@ -69,8 +69,12 @@ class TopicModel:
             self.create(num_topics)
 
     def create_lda_model(self, num_topics):
+        if self.corpus is None:
+            raise ValueError("cannot compute LDA (no corpus)")
+        self.corpus = self.corpus.corpus
+        self.dict = self.corpus.dict
         self.lda = models.ldamodel.LdaModel(
-            corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0)
+            corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0, passes=10)
         self.lda.save(self.dir + "lda.model")
 
     def create(self, num_topics):
