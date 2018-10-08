@@ -73,8 +73,8 @@ class TopicModel:
     def create_lda_model(self, num_topics):
         if self.corpus is None:
             raise ValueError("cannot compute LDA (no corpus)")
-        self.corpus = self.corpus.corpus
         self.dict = self.corpus.dict
+        self.corpus = self.corpus.corpus
         self.lda = models.ldamodel.LdaModel(
             corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0, passes=10)
         self.lda.save(self.dir + "lda.model")
