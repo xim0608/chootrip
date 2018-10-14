@@ -40,8 +40,7 @@ class Command(BaseCommand):
         spots = pd.read_sql_query(query, con=connection, index_col='id')
 
         spots = spots.assign(
-            neologd=spots.apply(lambda x: get_neologd(x), axis=1),
-            juman=spots.apply(lambda x: get_juman(x), axis=1)
+            neologd=spots.apply(lambda x: get_neologd(x), axis=1)
         )
 
         file_path = settings.BASE_DIR + "/recommender/lib/files/df/{}.pkl".format(datetime.now().strftime('%Y%m%d%H%M%S'))
