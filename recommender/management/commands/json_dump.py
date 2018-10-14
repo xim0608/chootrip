@@ -28,5 +28,9 @@ class Command(BaseCommand):
                 json.dump(json_data, f)
                 json_data = {}
                 data_count += 1
+        file_path = settings.BASE_DIR + "/recommender/lib/files/jsons/{}_{}.json".format(
+            datetime.now().strftime('%Y%m%d%H%M%S'), data_count)
+        f = open(file_path, 'w')
+        json.dump(json_data, f)
         elapsed_time = time.time() - start
         print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
