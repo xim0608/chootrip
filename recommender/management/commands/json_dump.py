@@ -13,6 +13,7 @@ class Command(BaseCommand):
         start = time.time()
 
         spots = Spot.objects.all()
+        created_at = datetime.now()
         json_data = {}
         data_count = 1
         for spot in spots:
@@ -23,7 +24,8 @@ class Command(BaseCommand):
                 contents.append(r.neologd_content)
             json_data[spot.id] = contents
             if spot.id % 10000 == 0:
-                file_path = settings.BASE_DIR + "/recommender/lib/files/jsons/{}_{}.json".format(datetime.now().strftime('%Y%m%d%H%M%S'), data_count)
+                file_path = settings.BASE_DIR + "/recommender/lib/files/jsons/{}_{}.json".format(
+                    created_at.strftime('%Y%m%d%H%M%S'), data_count)
                 f = open(file_path, 'w')
                 json.dump(json_data, f)
                 json_data = {}
