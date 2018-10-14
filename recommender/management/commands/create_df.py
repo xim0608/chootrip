@@ -11,8 +11,8 @@ from datetime import datetime
 
 
 def get_neologd(index):
-    a_reviews = AnalyzedReview.objects.filter(review__spot__base_id=index.base_id).only('neologd_title',
-                                                                                        'neologd_content')
+    a_reviews = AnalyzedReview.objects.filter(review__spot__id=index.name).only('neologd_title',
+                                                                                'neologd_content')
     contents = []
     for a_r in a_reviews:
         contents.append(a_r.neologd_title)
@@ -21,12 +21,12 @@ def get_neologd(index):
 
 
 def get_juman(index):
-    a_reviews = AnalyzedReview.objects.filter(review__spot__base_id=index.base_id).only('jumanpp_title',
-                                                                                        'jumanpp_content')
+    a_reviews = AnalyzedReview.objects.filter(review__spot__id=index.name).only('jumanpp_title',
+                                                                                'jumanpp_content')
     contents = []
     for a_r in a_reviews:
-        contents.append(a_r.neologd_title)
-        contents.append(a_r.neologd_content)
+        contents.append(a_r.jumanpp_title)
+        contents.append(a_r.jumanpp_content)
     return contents
 
 
@@ -39,10 +39,11 @@ class Command(BaseCommand):
         query = str(Spot.objects.all().query)
         spots = pd.read_sql_query(query, con=connection, index_col='id')
 
-        spots.assign(
+        spots = spots.assign(
             neologd=spots.apply(lambda x: get_neologd(x), axis=1),
             juman=spots.apply(lambda x: get_juman(x), axis=1)
         )
+
         file_path = settings.BASE_DIR + "/recommender/lib/files/df/{}.pkl".format(datetime.now().strftime('%Y%m%d%H%M%S'))
         spots.to_pickle(file_path)
         elapsed_time = time.time() - start
