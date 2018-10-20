@@ -31,8 +31,8 @@ class Corpus:
         c = connection.cursor()
         c.execute('select spots.id, array(select id from reviews where spot_id = spots.id) from spots;')
         data = c.fetchall()
-        for _spot_id, review_ids in data:
-            self.spot_documents_words += self.extract_words_from_review(review_ids)
+        self.spot_documents_words += Parallel(n_jobs=-1, verbose=3)(
+            [delayed(self.extract_words_from_review)(review_ids) for _spot_id, review_ids in data])
 
     @classmethod
     def extract_words_from_review(cls, review_ids):
