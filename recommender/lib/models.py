@@ -60,7 +60,7 @@ class Corpus:
         idx = times.index(max(times))
         latest_file_name = ls[idx]
         latest_file_time = latest_file_name.split('_')[0]
-        latest_files = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/{}_*.json".format(latest_file_time))
+        latest_files = glob.glob("{}_*.json".format(latest_file_time))
         return latest_files
 
     def create_dictionary(self):
