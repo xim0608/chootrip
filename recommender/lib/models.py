@@ -50,8 +50,7 @@ class Corpus:
             data = json.load(f)
             for spot_id, reviews in data:
                 for review in reviews:
-                    title, content = review
-                    self.spot_documents_words.append(morphological_analysis.extract_neologd_word_json(title, content))
+                    self.spot_documents_words.append(morphological_analysis.extract_neologd_word_json(review))
             f.close()
 
     def get_latest_dumped_files(self):
