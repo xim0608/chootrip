@@ -21,6 +21,10 @@ class Command(BaseCommand):
             '--num_topics', dest='num_topics', required=True,
             help='num of topics',
         )
+        parser.add_argument(
+            '--load_json', dest='load_json', required=False,
+            help='num of topics',
+        )
 
     def handle(self, *args, **options):
         start = time.time()

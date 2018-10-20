@@ -6,13 +6,15 @@ from datetime import datetime
 import os
 from django.conf import settings
 import logging
+import glob
+import json
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
 
 
 class Corpus:
-    def __init__(self, created_at=datetime.now()):
+    def __init__(self, created_at=datetime.now(), load_json=False):
         self.created_at = created_at
         self.dir = settings.BASE_DIR + "/recommender/lib/files/corpus/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
         self.corpus = None
@@ -22,8 +24,13 @@ class Corpus:
         if os.path.isdir(self.dir):
             self.load_exist_models()
         else:
-            os.mkdir(self.dir)
-            self.create()
+            if not load_json:
+                # create corpus and dictionary from database
+                os.mkdir(self.dir)
+                self.create()
+            else:
+                # create corpus and dictionary from dumped json
+                self.create_from_json()
 
     def extract_words(self):
         analyzed_review = AnalyzedReview.objects.all().only('neologd_title', 'neologd_content')
@@ -34,6 +41,27 @@ class Corpus:
             reviews = analyzed_review.filter(review_id__in=ids)
             for review in reviews:
                 self.spot_documents_words.append(morphological_analysis.extract_neologd_word(review))
+
+    def extract_words_from_json(self):
+        # get latest dumped files
+        latest_files = self.get_latest_dumped_files()
+        for file in latest_files:
+            f = open(file)
+            data = json.load(f)
+            for spot_id, reviews in data:
+                for review in reviews:
+                    title, content = review
+                    self.spot_documents_words.append(morphological_analysis.extract_neologd_word_json(title, content))
+            f.close()
+
+    def get_latest_dumped_files(self):
+        ls = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/*.json")
+        times = [os.path.getctime(file) for file in ls]
+        idx = times.index(max(times))
+        latest_file_name = ls[idx]
+        latest_file_time = latest_file_name.split('_')[0]
+        latest_files = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/{}_*.json".format(latest_file_time))
+        return latest_files
 
     def create_dictionary(self):
         self.dict = corpora.Dictionary(self.spot_documents_words)
@@ -50,6 +78,11 @@ class Corpus:
 
     def create(self):
         self.extract_words()
+        self.create_dictionary()
+        self.create_corpus()
+
+    def create_from_json(self):
+        self.extract_words_from_json()
         self.create_dictionary()
         self.create_corpus()
 

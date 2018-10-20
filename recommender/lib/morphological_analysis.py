@@ -23,6 +23,17 @@ def extract_neologd_word(review):
     return spot_words
 
 
+def extract_neologd_word_json(title, content):
+    spot_words = []
+    for node_with_feature in title, content:
+        if node_with_feature[0] == '名詞':
+            if node_with_feature[1] == '一般' or node_with_feature[1] == 'サ変接続' or \
+                    (node_with_feature[1] == '固有名詞' and not include_num(node_with_feature[6]) and not node_with_feature[2] == '人名' and not node_with_feature[2] == '地域'):
+                spot_words.append(node_with_feature[6])
+    return spot_words
+
+
+
 class Analysis:
     def __init__(self, reviews_id=Review.objects.all().values('id')):
         self.reviews_id = reviews_id
