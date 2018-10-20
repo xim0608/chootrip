@@ -6,6 +6,8 @@ from datetime import datetime
 import os
 from django.conf import settings
 import logging
+from joblib import Parallel, delayed
+from django.db import connection
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
@@ -26,14 +28,30 @@ class Corpus:
             self.create()
 
     def extract_words(self):
-        analyzed_review = AnalyzedReview.objects.all().only('neologd_title', 'neologd_content')
-        for spot in Spot.objects.all().prefetch_related(
-                Prefetch('review_set', queryset=Review.objects.all().only('id'), to_attr='reviews')):
-            # words list including this spot review
-            ids = [r.id for r in spot.reviews]
-            reviews = analyzed_review.filter(review_id__in=ids)
-            for review in reviews:
-                self.spot_documents_words.append(morphological_analysis.extract_neologd_word(review))
+        c = connection.cursor()
+        c.execute('select spots.id, array(select id from reviews where spot_id = spots.id) from spots;')
+        data = c.fetchall()
+        for _spot_id, review_ids in data:
+            self.spot_documents_words += self.extract_words_from_review(review_ids)
+
+    @classmethod
+    def extract_words_from_review(cls, review_ids):
+        spot_document_words = []
+        reviews = AnalyzedReview.objects.filter(review_id__in=review_ids)
+        for review in reviews:
+            spot_document_words.append(cls.extract_neologd_word(review))
+        return spot_document_words
+
+    @classmethod
+    def extract_neologd_word(cls, review):
+        spot_words = []
+        for node_with_feature in review.neologd_title + review.neologd_content:
+            if node_with_feature[0] == '名詞':
+                if node_with_feature[1] == '一般' or node_with_feature[1] == 'サ変接続' or \
+                        (node_with_feature[1] == '固有名詞' and not morphological_analysis.include_num(node_with_feature[6]) and not
+                        node_with_feature[2] == '人名' and not node_with_feature[2] == '地域'):
+                    spot_words.append(node_with_feature[6])
+        return spot_words
 
     def create_dictionary(self):
         self.dict = corpora.Dictionary(self.spot_documents_words)
