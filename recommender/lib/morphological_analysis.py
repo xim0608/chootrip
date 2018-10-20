@@ -24,13 +24,13 @@ def extract_neologd_word(review):
 
 
 def extract_neologd_word_json(review):
-    spot_words = []
+    review_words = []
     for node_with_feature in review:
         if node_with_feature[0] == '名詞':
             if node_with_feature[1] == '一般' or node_with_feature[1] == 'サ変接続' or \
                     (node_with_feature[1] == '固有名詞' and not include_num(node_with_feature[6]) and not node_with_feature[2] == '人名' and not node_with_feature[2] == '地域'):
-                spot_words.append(node_with_feature[6])
-    return spot_words
+                review_words.append(node_with_feature[6])
+    return review_words
 
 
 
