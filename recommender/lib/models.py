@@ -24,9 +24,9 @@ class Corpus:
         if os.path.isdir(self.dir):
             self.load_exist_models()
         else:
+            os.mkdir(self.dir)
             if not load_json:
                 # create corpus and dictionary from database
-                os.mkdir(self.dir)
                 self.create()
             else:
                 # create corpus and dictionary from dumped json
