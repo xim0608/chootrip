@@ -48,7 +48,7 @@ class Corpus:
         for file in latest_files:
             f = open(file)
             data = json.load(f)
-            for spot_id, reviews in data:
+            for spot_id, reviews in data.items():
                 for review in reviews:
                     self.spot_documents_words.append(morphological_analysis.extract_neologd_word_json(review))
             f.close()
