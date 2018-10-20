@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 contents.append(r.neologd_title)
                 contents.append(r.neologd_content)
             json_data[spot.id] = contents
-            if spot.id % 10000 == 0:
+            if spot.id % 1000 == 0:
                 file_path = settings.BASE_DIR + "/recommender/lib/files/jsons/{}_{}.json".format(
                     created_at.strftime('%Y%m%d%H%M%S'), data_count)
                 f = open(file_path, 'w')
