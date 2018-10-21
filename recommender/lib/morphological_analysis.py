@@ -107,7 +107,7 @@ class AnalysisJuman(Analysis):
             replaced_content = content.replace('\\', '')
             if replaced_content:
                 payload = {'string': replaced_content}
-                content_res = requests.post('http://juman-api/parse', data=payload)
+                content_res = requests.post('http://jumanpp-api/parse', data=payload)
                 jumanpp_content = content_res.json()['results']
             else:
                 jumanpp_content = []
@@ -116,7 +116,7 @@ class AnalysisJuman(Analysis):
             replaced_title = title.replace('\\', '')
             if replaced_title:
                 payload = {'string': replaced_title}
-                title_res = requests.post('http://juman-api/parse', data=payload)
+                title_res = requests.post('http://jumanpp-api/parse', data=payload)
                 jumanpp_title = title_res.json()['results']
             else:
                 jumanpp_title = []

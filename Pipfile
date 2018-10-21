@@ -16,6 +16,7 @@ pandas = "*"
 matplotlib = "*"
 seaborn = "*"
 numpy = "*"
+pyyaml = "*"
 
 [dev-packages]
 django-extensions = "*"

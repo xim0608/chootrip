@@ -1,72 +1,69 @@
-from recommender.models import Review, AnalyzedReview, Spot
-from django.db.models import Prefetch
 from recommender.lib import morphological_analysis
-from gensim import corpora, models, similarities
-from datetime import datetime
-import os
+from gensim import corpora, models
 from django.conf import settings
 import logging
 import glob
 import json
+import yaml
+import os
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
 
+f = open(settings.BASE_DIR + "/recommender/lib/corpus_settings.yml", "r+")
+corpus_setting = yaml.load(f)
+
+f = open(settings.BASE_DIR + "/recommender/lib/topic_settings.yml", "r+")
+topic_setting = yaml.load(f)
+
 
 class Corpus:
-    def __init__(self, created_at=datetime.now(), load_json=False):
-        self.created_at = created_at
-        self.dir = settings.BASE_DIR + "/recommender/lib/files/corpus/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
+    def __init__(self, name):
+        self.name = name
+        self.settings = corpus_setting[name]
+        self.no_below = self.settings['no_below']
+        self.no_above = self.settings['no_above']
+        self.extract_words_method = self.settings['extract_words_method']
+        self.morphological_analysis = self.settings['morphological_analysis']
+        self.dir = settings.BASE_DIR + "/recommender/lib/files/corpus/{}/".format(name)
         self.corpus = None
         self.dict = None
         self.spot_documents_words = []
 
         if os.path.isdir(self.dir):
             self.load_exist_models()
-        else:
-            os.mkdir(self.dir)
-            if not load_json:
-                # create corpus and dictionary from database
-                self.create()
-            else:
-                # create corpus and dictionary from dumped json
-                self.create_from_json()
 
-    def extract_words(self):
-        analyzed_review = AnalyzedReview.objects.all().only('neologd_title', 'neologd_content')
-        for spot in Spot.objects.all().prefetch_related(
-                Prefetch('review_set', queryset=Review.objects.all().only('id'), to_attr='reviews')):
-            # words list including this spot review
-            ids = [r.id for r in spot.reviews]
-            reviews = analyzed_review.filter(review_id__in=ids)
-            for review in reviews:
-                self.spot_documents_words.append(morphological_analysis.extract_neologd_word(review))
+    # def extract_words(self):
+    #     analyzed_review = AnalyzedReview.objects.all().only('neologd_title', 'neologd_content')
+    #     for spot in Spot.objects.all().prefetch_related(
+    #             Prefetch('review_set', queryset=Review.objects.all().only('id'), to_attr='reviews')):
+    #         # words list including this spot review
+    #         ids = [r.id for r in spot.reviews]
+    #         reviews = analyzed_review.filter(review_id__in=ids)
+    #         for review in reviews:
+    #             self.spot_documents_words.append(morphological_analysis.extract_neologd_word(review))
 
     def extract_words_from_json(self):
         # get latest dumped files
-        latest_files = self.get_latest_dumped_files()
-        for file in latest_files:
+        files = self.get_dumped_files()
+        for file in files:
             f = open(file)
             data = json.load(f)
             for spot_id, reviews in data.items():
                 spot_document_words = []
                 for review in reviews:
+                    # TODO: change method by corpus_settings.yml
                     spot_document_words.extend(morphological_analysis.extract_neologd_word_json(review))
                 self.spot_documents_words.append(spot_document_words)
             f.close()
 
-    def get_latest_dumped_files(self):
-        ls = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/*.json")
-        times = [os.path.getctime(file) for file in ls]
-        idx = times.index(max(times))
-        latest_file_name = ls[idx]
-        latest_file_time = latest_file_name.split('_')[0]
-        latest_files = glob.glob("{}_*.json".format(latest_file_time))
-        return latest_files
+    def get_dumped_files(self):
+        files = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/{}/*.json".format(self.morphological_analysis))
+        return files
 
     def create_dictionary(self):
         self.dict = corpora.Dictionary(self.spot_documents_words)
-        self.dict.filter_extremes(no_below=2, no_above=0.3)
+        self.dict.filter_extremes(no_below=int(self.no_below), no_above=float(self.no_above))
         self.dict.save_as_text(self.dir + "dict.txt")
 
     def create_corpus(self):
@@ -78,31 +75,31 @@ class Corpus:
         self.corpus = corpora.MmCorpus(self.dir + 'cop.mm')
 
     def create(self):
-        self.extract_words()
-        self.create_dictionary()
-        self.create_corpus()
-
-    def create_from_json(self):
+        if os.path.isdir(self.dir):
+            os.removedirs(self.dir)
+        os.mkdir(self.dir)
+        # self.extract_words()
         self.extract_words_from_json()
         self.create_dictionary()
         self.create_corpus()
 
+    # def create_from_json(self):
+    #     self.extract_words_from_json()
+    #     self.create_dictionary()
+    #     self.create_corpus()
+
 
 class TopicModel:
-    def __init__(self, num_topics=None, corpus=None, created_at=datetime.now()):
-        self.created_at = created_at
-        self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(self.created_at.strftime('%Y%m%d%H%M%S'))
-        self.corpus = corpus
+    def __init__(self, name):
+        self.name = name
+        self.settings = topic_setting[name]
+        self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(name)
+        self.corpus = Corpus(self.settings['corpus'])
+        self.num_topics = int(self.settings['num_topics'])
         self.dict = None
         self.lda = None
         if os.path.isdir(self.dir):
             self.load_exist_models()
-        else:
-            # create model
-            os.mkdir(self.dir)
-            if num_topics is None:
-                raise ValueError("cannot compute LDA (specify num topics)")
-            self.create(num_topics)
 
     def create_lda_model(self, num_topics):
         if self.corpus is None:
@@ -113,8 +110,11 @@ class TopicModel:
             corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0, passes=10)
         self.lda.save(self.dir + "lda.model")
 
-    def create(self, num_topics):
-        self.create_lda_model(num_topics)
+    def create(self):
+        if os.path.isdir(self.dir):
+            os.removedirs(self.dir)
+        os.mkdir(self.dir)
+        self.create_lda_model(self.num_topics)
 
     def load_exist_models(self):
         self.lda = models.LdaModel.load(self.dir + 'lda.model')

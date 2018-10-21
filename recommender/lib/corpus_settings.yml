@@ -1,0 +1,7 @@
+nouns:
+  morphological_analysis: neologd
+  extract_words_method: extract_neologd_nouns
+  no_below: 2
+  no_above: 0.3
+
+

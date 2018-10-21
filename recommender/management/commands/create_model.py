@@ -1,8 +1,7 @@
 from django.core.management.base import BaseCommand
 import time
 from socket import gethostname
-from datetime import datetime
-from recommender.lib.models import TopicModel, Corpus
+from recommender.lib.models import Corpus, TopicModel
 
 
 class Command(BaseCommand):
@@ -10,17 +9,17 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--load_json', dest='load_json', required=False,
-            help='num of topics',
+            '--corpus', dest='corpus', required=False,
+            help='corpus',
         )
 
     def handle(self, *args, **options):
         start = time.time()
         try:
-            if options['load_json'] == "True":
-                Corpus(load_json=True)
-            else:
-                Corpus()
+            if options['topic_model']:
+                TopicModel(options['topic_model']).create()
+            elif options['corpus']:
+                Corpus(name=options['corpus']).create()
         except Exception as e:
             import traceback
             from recommender.lib.notifications import Slack
