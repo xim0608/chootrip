@@ -22,7 +22,7 @@ class Command(BaseCommand):
         )
 
     def get_latest_saved_corpus(self):
-        ls = glob.glob(settings.BASE_DIR + "/recommender/lib/corpus/*")
+        ls = glob.glob(settings.BASE_DIR + "/recommender/lib/files/corpus/*")
         times = [os.path.getctime(file) for file in ls]
         idx = times.index(max(times))
         latest_dir_name = ls[idx]
