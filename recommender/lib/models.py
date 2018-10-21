@@ -7,6 +7,7 @@ import json
 import yaml
 import os
 from recommender.lib import extract_words
+import shutil
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
@@ -76,7 +77,7 @@ class Corpus:
 
     def create(self):
         if os.path.isdir(self.dir):
-            os.removedirs(self.dir)
+            shutil.rmtree(self.dir)
         os.mkdir(self.dir)
         # self.extract_words()
         self.extract_words_from_json()
@@ -113,7 +114,7 @@ class TopicModel:
 
     def create(self):
         if os.path.isdir(self.dir):
-            os.removedirs(self.dir)
+            shutil.rmtree(self.dir)
         os.mkdir(self.dir)
         self.create_lda_model(self.num_topics)
 
