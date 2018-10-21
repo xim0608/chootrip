@@ -12,12 +12,16 @@ class Command(BaseCommand):
             '--corpus', dest='corpus', required=False,
             help='corpus',
         )
+        parser.add_argument(
+            '--topic', dest='topic', required=False,
+            help='topic_model',
+        )
 
     def handle(self, *args, **options):
         start = time.time()
         try:
-            if options['topic_model']:
-                TopicModel(options['topic_model']).create()
+            if options['topic']:
+                TopicModel(options['topic']).create()
             elif options['corpus']:
                 Corpus(name=options['corpus']).create()
         except Exception as e:
