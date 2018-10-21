@@ -6,6 +6,7 @@ import glob
 import json
 import yaml
 import os
+from recommender.lib import extract_words
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
@@ -52,8 +53,7 @@ class Corpus:
             for spot_id, reviews in data.items():
                 spot_document_words = []
                 for review in reviews:
-                    # TODO: change method by corpus_settings.yml
-                    spot_document_words.extend(morphological_analysis.extract_neologd_word_json(review))
+                    spot_document_words.extend(getattr(extract_words, self.extract_words_method)(review))
                 self.spot_documents_words.append(spot_document_words)
             f.close()
 
@@ -94,9 +94,10 @@ class TopicModel:
         self.name = name
         self.settings = topic_setting[name]
         self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(name)
-        self.corpus = Corpus(self.settings['corpus'])
+        self._corpus = Corpus(self.settings['corpus'])
         self.num_topics = int(self.settings['num_topics'])
         self.dict = None
+        self.corpus = None
         self.lda = None
         if os.path.isdir(self.dir):
             self.load_exist_models()
@@ -104,8 +105,8 @@ class TopicModel:
     def create_lda_model(self, num_topics):
         if self.corpus is None:
             raise ValueError("cannot compute LDA (no corpus)")
-        self.dict = self.corpus.dict
-        self.corpus = self.corpus.corpus
+        self.dict = self._corpus.dict
+        self.corpus = self._corpus.corpus
         self.lda = models.ldamodel.LdaModel(
             corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0, passes=10)
         self.lda.save(self.dir + "lda.model")

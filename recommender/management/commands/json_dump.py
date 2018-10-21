@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     contents.append(r.jumanpp_title)
                     contents.append(r.jumanpp_content)
                 json_data[spot.id] = contents
-                if spot.id % 5000 == 0:
+                if spot.id % 1000 == 0:
                     file_path = settings.BASE_DIR + "/recommender/lib/files/jsons/jumanpp/{}.json".format(data_count)
                     f = open(file_path, 'w')
                     json.dump(json_data, f)

@@ -37,6 +37,8 @@ yarn-error.log*
 *.json
 **/db/data/*
 
+/notebooks/*
+
 **/lib/files/topic_model/**
 **/lib/files/corpus/**
 **/lib/files/documents/**
