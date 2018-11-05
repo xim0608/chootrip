@@ -107,21 +107,18 @@ class TopicModel:
         self.name = name
         self.settings = topic_setting[name]
         self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(name)
-        self._corpus = Corpus(self.settings['corpus'])
+        self.corpus_model = Corpus(self.settings['corpus'])
         self.num_topics = int(self.settings['num_topics'])
-        self.dict = None
-        self.corpus = None
         self.lda = None
         if os.path.isdir(self.dir):
             self.load_exist_models()
 
     def create_lda_model(self, num_topics):
-        if self.corpus is None:
+        if self.corpus_model is None:
             raise ValueError("cannot compute LDA (no corpus)")
-        self.dict = self._corpus.dict
-        self.corpus = self._corpus.corpus
         self.lda = models.ldamodel.LdaModel(
-            corpus=self.corpus, num_topics=num_topics, id2word=self.dict, update_every=0, passes=10)
+            corpus=self.corpus_model.corpus, num_topics=num_topics,
+            id2word=self.corpus_model.dict, update_every=0, passes=10)
         self.lda.save(self.dir + "lda.model")
 
     def create(self):
@@ -137,11 +134,8 @@ class TopicModel:
 class Recommend:
     def __init__(self, topic_model: TopicModel):
         self.topic_model = topic_model
-        self.load_exist_model()
+        self.corpus_model = topic_model.corpus_model
 
-    def load_exist_model(self):
-        pass
-
-    def save(self):
-        pass
-
+    def get_vec(self, spot_id):
+        converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
+        return self.topic_model.lda[self.corpus_model.corpus[converted_doc_id]]
