@@ -31,19 +31,23 @@ class Corpus:
         self.corpus = None
         self.dict = None
         self.spot_documents_words = []
+        # key: spot_id, value: doc_id
+        self.id_conversion_table = {}
 
         if os.path.isdir(self.dir):
             self.load_exist_models()
 
-    # def extract_words(self):
-    #     analyzed_review = AnalyzedReview.objects.all().only('neologd_title', 'neologd_content')
-    #     for spot in Spot.objects.all().prefetch_related(
-    #             Prefetch('review_set', queryset=Review.objects.all().only('id'), to_attr='reviews')):
-    #         # words list including this spot review
-    #         ids = [r.id for r in spot.reviews]
-    #         reviews = analyzed_review.filter(review_id__in=ids)
-    #         for review in reviews:
-    #             self.spot_documents_words.append(morphological_analysis.extract_neologd_word(review))
+    def convert_id(self, spot_id=None, doc_id=None):
+        if (spot_id is None and doc_id is None) or (spot_id is not None and doc_id is not None):
+            raise ValueError('Specify ONE variable.')
+        if spot_id:
+            return self.id_conversion_table.get(spot_id)
+        if doc_id:
+            # return dict index
+            for dict_spot_id, dict_doc_id in self.id_conversion_table:
+                if dict_doc_id == doc_id:
+                    return dict_spot_id
+            raise ValueError("out of Index")
 
     def extract_words_from_json(self):
         # get latest dumped files
@@ -53,12 +57,14 @@ class Corpus:
             data = json.load(f)
             for spot_id, reviews in data.items():
                 spot_document_words = []
+                self.id_conversion_table[spot_id] = len(spot_document_words)
                 for review in reviews:
                     spot_document_words.extend(getattr(extract_words, self.extract_words_method)(review))
                 self.spot_documents_words.append(spot_document_words)
             f.close()
 
     def get_dumped_files(self):
+        # get morphological analyzed json data
         files = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/{}/*.json".format(self.morphological_analysis))
         return files
 
@@ -70,10 +76,15 @@ class Corpus:
     def create_corpus(self):
         self.corpus = [self.dict.doc2bow(text) for text in self.spot_documents_words]
         corpora.MmCorpus.serialize(self.dir + "cop.mm", self.corpus)
+        # also save id_conversion_table for convert corpus_id and spot_id
+        f = open(self.dir + "id_conversion_table.json", 'w')
+        json.dump(self.id_conversion_table, f)
 
     def load_exist_models(self):
         self.dict = corpora.Dictionary.load_from_text(self.dir + 'dict.txt')
         self.corpus = corpora.MmCorpus(self.dir + 'cop.mm')
+        f = open(self.dir + "id_conversion_table.json", 'r')
+        self.id_conversion_table = json.load(f)
 
     def create(self):
         if os.path.isdir(self.dir):
@@ -120,3 +131,15 @@ class TopicModel:
 
     def load_exist_models(self):
         self.lda = models.LdaModel.load(self.dir + 'lda.model')
+
+class Recomend:
+    def __init__(self, topic_model: TopicModel):
+        self.topic_model = topic_model
+        self.load_exist_model()
+
+    def load_exist_model(self):
+        pass
+
+    def save(self):
+        pass
+
