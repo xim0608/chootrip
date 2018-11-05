@@ -1,3 +1,9 @@
 noun_30:
   corpus: nouns
   num_topics: 30
+noun_40:
+  corpus: nouns
+  num_topics: 40
+noun_50:
+  corpus: nouns
+  num_topics: 40
