@@ -52,7 +52,7 @@ class Corpus:
 
     def extract_words_from_json(self):
         # get latest dumped files
-        files = self.get_dumped_files()
+        files = self.get_dumped_json_files()
         for file in files:
             f = open(file)
             data = json.load(f)
@@ -64,9 +64,29 @@ class Corpus:
                 self.spot_documents_words.append(spot_document_words)
             f.close()
 
-    def get_dumped_files(self):
+    def get_dumped_json_files(self):
         # get morphological analyzed json data
-        files = glob.glob(settings.BASE_DIR + "/recommender/lib/files/jsons/{}/*.json".format(self.morphological_analysis))
+        files = glob.glob(
+            settings.BASE_DIR + "/recommender/lib/files/jsons/{}/*.json".format(self.morphological_analysis))
+        return files
+
+    def extract_words_from_pickles(self):
+        # get latest dumped files
+        files = self.get_dumped_pickles()
+        for file in files:
+            with open(file, mode='rb') as pickled_file:
+                data = pickle.load(pickled_file)
+                for spot_id, reviews in data.items():
+                    spot_document_words = []
+                    self.id_conversion_table[spot_id] = len(spot_document_words)
+                    for review in reviews:
+                        spot_document_words.extend(getattr(extract_words, self.extract_words_method)(review))
+                    self.spot_documents_words.append(spot_document_words)
+
+    def get_dumped_pickles(self):
+        # get morphological analyzed json data
+        files = glob.glob(
+            settings.BASE_DIR + "/recommender/lib/files/pickles/{}/*.pickle".format(self.morphological_analysis))
         return files
 
     def create_dictionary(self):
