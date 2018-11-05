@@ -84,7 +84,7 @@ class Corpus:
     def load_exist_models(self):
         self.dict = corpora.Dictionary.load_from_text(self.dir + 'dict.txt')
         self.corpus = corpora.MmCorpus(self.dir + 'cop.mm')
-        with open(self.dir + "id_conversion_table.json", mode='rb') as f:
+        with open(self.dir + "id_conversion_table.pickle", mode='rb') as f:
             self.id_conversion_table = pickle.load(f)
 
     def create(self):
