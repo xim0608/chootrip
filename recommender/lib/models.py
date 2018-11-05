@@ -103,14 +103,14 @@ class Corpus:
 
 
 class TopicModel:
-    def __init__(self, name):
+    def __init__(self, name, skip_load=False):
         self.name = name
         self.settings = topic_setting[name]
         self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(name)
         self.corpus_model = Corpus(self.settings['corpus'])
         self.num_topics = int(self.settings['num_topics'])
         self.lda = None
-        if os.path.isdir(self.dir):
+        if os.path.isdir(self.dir) and not skip_load:
             self.load_exist_models()
 
     def create_lda_model(self, num_topics):

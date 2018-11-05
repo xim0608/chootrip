@@ -21,7 +21,7 @@ class Command(BaseCommand):
         start = time.time()
         try:
             if options['topic']:
-                TopicModel(options['topic']).create()
+                TopicModel(options['topic'], skip_load=True).create()
             elif options['corpus']:
                 Corpus(name=options['corpus'], skip_load=True).create()
         except Exception as e:
