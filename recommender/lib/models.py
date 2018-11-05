@@ -112,7 +112,7 @@ class Corpus:
             shutil.rmtree(self.dir)
         os.mkdir(self.dir)
         # self.extract_words()
-        self.extract_words_from_json()
+        self.extract_words_from_pickles()
         self.create_dictionary()
         self.create_corpus()
 
