@@ -134,7 +134,7 @@ class TopicModel:
         self.lda = models.LdaModel.load(self.dir + 'lda.model')
 
 
-class Recomend:
+class Recommend:
     def __init__(self, topic_model: TopicModel):
         self.topic_model = topic_model
         self.load_exist_model()
