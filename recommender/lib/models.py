@@ -1,4 +1,3 @@
-from recommender.lib import morphological_analysis
 from gensim import corpora, models
 from django.conf import settings
 import logging
@@ -136,9 +135,12 @@ class TopicModel:
     def create_lda_model(self, num_topics):
         if self.corpus_model is None:
             raise ValueError("cannot compute LDA (no corpus)")
-        self.lda = models.ldamodel.LdaModel(
+        # self.lda = models.ldamodel.LdaModel(
+        #     corpus=self.corpus_model.corpus, num_topics=num_topics,
+        #     id2word=self.corpus_model.dict, update_every=0, passes=10)
+        self.lda = models.ldamulticore.LdaMulticore(
             corpus=self.corpus_model.corpus, num_topics=num_topics,
-            id2word=self.corpus_model.dict, update_every=0, passes=10)
+            id2word=self.corpus_model.dict, batch=True, passes=10)
         self.lda.save(self.dir + "lda.model")
 
     def create(self):
