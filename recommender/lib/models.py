@@ -42,12 +42,12 @@ class Corpus:
         if (spot_id is None and doc_id is None) or (spot_id is not None and doc_id is not None):
             raise ValueError('Specify ONE variable.')
         if spot_id:
-            return self.id_conversion_table.get(spot_id)
+            return self.id_conversion_table.get(str(spot_id))
         if doc_id:
             # return dict index
             for dict_spot_id, dict_doc_id in self.id_conversion_table:
                 if dict_doc_id == doc_id:
-                    return dict_spot_id
+                    return int(dict_spot_id)
             raise ValueError("out of Index")
 
     def extract_words_from_json(self):
@@ -58,7 +58,7 @@ class Corpus:
             data = json.load(f)
             for spot_id, reviews in data.items():
                 spot_document_words = []
-                self.id_conversion_table[spot_id] = len(spot_document_words)
+                self.id_conversion_table[spot_id] = len(self.spot_documents_words)
                 for review in reviews:
                     spot_document_words.extend(getattr(extract_words, self.extract_words_method)(review))
                 self.spot_documents_words.append(spot_document_words)
@@ -78,7 +78,7 @@ class Corpus:
                 data = pickle.load(pickled_file)
                 for spot_id, reviews in data.items():
                     spot_document_words = []
-                    self.id_conversion_table[spot_id] = len(spot_document_words)
+                    self.id_conversion_table[spot_id] = len(self.spot_documents_words)
                     for review in reviews:
                         spot_document_words.extend(getattr(extract_words, self.extract_words_method)(review))
                     self.spot_documents_words.append(spot_document_words)
