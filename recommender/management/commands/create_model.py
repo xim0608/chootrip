@@ -23,7 +23,7 @@ class Command(BaseCommand):
             if options['topic']:
                 TopicModel(options['topic']).create()
             elif options['corpus']:
-                Corpus(name=options['corpus']).create()
+                Corpus(name=options['corpus'], skip_load=True).create()
         except Exception as e:
             import traceback
             from recommender.lib.notifications import Slack

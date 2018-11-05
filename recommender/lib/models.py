@@ -8,6 +8,7 @@ import yaml
 import os
 from recommender.lib import extract_words
 import shutil
+import pickle
 
 logging.basicConfig(format='%(levelname)s : %(message)s', level=logging.INFO)
 logging.root.level = logging.INFO
@@ -20,7 +21,7 @@ topic_setting = yaml.load(f)
 
 
 class Corpus:
-    def __init__(self, name):
+    def __init__(self, name, skip_load=False):
         self.name = name
         self.settings = corpus_setting[name]
         self.no_below = self.settings['no_below']
@@ -34,7 +35,7 @@ class Corpus:
         # key: spot_id, value: doc_id
         self.id_conversion_table = {}
 
-        if os.path.isdir(self.dir):
+        if os.path.isdir(self.dir) and not skip_load:
             self.load_exist_models()
 
     def convert_id(self, spot_id=None, doc_id=None):
@@ -77,14 +78,14 @@ class Corpus:
         self.corpus = [self.dict.doc2bow(text) for text in self.spot_documents_words]
         corpora.MmCorpus.serialize(self.dir + "cop.mm", self.corpus)
         # also save id_conversion_table for convert corpus_id and spot_id
-        f = open(self.dir + "id_conversion_table.json", 'w')
-        json.dump(self.id_conversion_table, f)
+        with open(self.dir + "id_conversion_table.pickle", mode='wb') as f:
+            pickle.dump(self.id_conversion_table, f)
 
     def load_exist_models(self):
         self.dict = corpora.Dictionary.load_from_text(self.dir + 'dict.txt')
         self.corpus = corpora.MmCorpus(self.dir + 'cop.mm')
-        f = open(self.dir + "id_conversion_table.json", 'r')
-        self.id_conversion_table = json.load(f)
+        with open(self.dir + "id_conversion_table.json", mode='rb') as f:
+            self.id_conversion_table = pickle.load(f)
 
     def create(self):
         if os.path.isdir(self.dir):
@@ -131,6 +132,7 @@ class TopicModel:
 
     def load_exist_models(self):
         self.lda = models.LdaModel.load(self.dir + 'lda.model')
+
 
 class Recomend:
     def __init__(self, topic_model: TopicModel):
