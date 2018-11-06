@@ -152,9 +152,6 @@ class TopicModel:
     def load_exist_models(self):
         self.lda = models.LdaModel.load(self.dir + 'lda.model')
 
-    def get_spot_topic_words(self, spot_id):
-        return self.lda.show_topics(self.corpus_model.convert_id(spot_id=spot_id))
-
 
 class Recommend:
     def __init__(self, topic_model: TopicModel):
@@ -164,3 +161,7 @@ class Recommend:
     def get_vec(self, spot_id):
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
         return self.topic_model.lda[self.corpus_model.corpus[converted_doc_id]]
+
+    def get_spot_topic_words(self, spot_id):
+        converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
+        return self.topic_model.lda.show_topics(converted_doc_id)
