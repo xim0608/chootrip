@@ -152,6 +152,9 @@ class TopicModel:
     def load_exist_models(self):
         self.lda = models.LdaModel.load(self.dir + 'lda.model')
 
+    def get_spot_topic_words(self, spot_id):
+        self.lda.show_topics(self.corpus_model.convert_id(spot_id=spot_id))
+
 
 class Recommend:
     def __init__(self, topic_model: TopicModel):
