@@ -161,6 +161,8 @@ class Recommend:
         self.index = None
         if os.path.isdir(self.dir):
             self.load_exist_index()
+        else:
+            self.create()
 
     def create(self):
         if os.path.isdir(self.dir):
