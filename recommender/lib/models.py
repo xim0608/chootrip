@@ -44,7 +44,7 @@ class Corpus:
             return self.id_conversion_table.get(spot_id)
         if doc_id:
             # return dict index
-            for dict_spot_id, dict_doc_id in self.id_conversion_table:
+            for dict_spot_id, dict_doc_id in self.id_conversion_table.items():
                 if dict_doc_id == doc_id:
                     return int(dict_spot_id)
             raise ValueError("out of Index")
