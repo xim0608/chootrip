@@ -41,7 +41,7 @@ class Corpus:
         if (spot_id is None and doc_id is None) or (spot_id is not None and doc_id is not None):
             raise ValueError('Specify ONE variable.')
         if spot_id:
-            return self.id_conversion_table.get(str(spot_id))
+            return self.id_conversion_table.get(spot_id)
         if doc_id:
             # return dict index
             for dict_spot_id, dict_doc_id in self.id_conversion_table:
