@@ -1,4 +1,4 @@
-from gensim import corpora, models
+from gensim import corpora, models, similarities
 from django.conf import settings
 import logging
 import glob
@@ -157,6 +157,20 @@ class Recommend:
     def __init__(self, topic_model: TopicModel):
         self.topic_model = topic_model
         self.corpus_model = topic_model.corpus_model
+        self.dir = settings.BASE_DIR + "/recommender/lib/files/similarities_index/{}/".format(self.topic_model.name)
+        self.index = None
+        if os.path.isdir(self.dir):
+            self.load_exist_index()
+
+    def create(self):
+        if os.path.isdir(self.dir):
+            shutil.rmtree(self.dir)
+        os.mkdir(self.dir)
+        self.index = similarities.MatrixSimilarity(self.topic_model.lda[self.corpus_model.corpus])
+        self.index.save(self.dir + 'similarities.index')
+
+    def load_exist_index(self):
+        self.index = similarities.MatrixSimilarity.load(self.dir + 'similarities.index')
 
     def get_vec(self, spot_id):
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
