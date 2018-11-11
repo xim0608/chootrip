@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'recommender',
-    'locations'
+    'locations',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +157,7 @@ NOTEBOOK_ARGUMENTS = [
     '--no-browser',
     '--notebook-dir', "./notebooks"
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}

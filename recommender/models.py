@@ -74,6 +74,12 @@ class SpotImage(models.Model):
     owner = models.CharField(max_length=255)
     owner_name = models.CharField(max_length=255)
 
+    def __unicode__(self):
+        return self.url
+
+    def __str__(self):
+        return self.url
+
 
 class Review(models.Model):
     class Meta:
