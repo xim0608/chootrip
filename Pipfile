@@ -17,6 +17,9 @@ matplotlib = "*"
 seaborn = "*"
 numpy = "*"
 pyyaml = "*"
+djangorestframework = "*"
+django-filter = "*"
+flickrapi = "*"
 
 [dev-packages]
 django-extensions = "*"
