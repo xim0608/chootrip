@@ -42,3 +42,4 @@ yarn-error.log*
 **/lib/files/topic_model/**
 **/lib/files/corpus/**
 **/lib/files/documents/**
+**/lib/files/similarities_index/**
