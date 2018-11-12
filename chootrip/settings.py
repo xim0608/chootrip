@@ -27,7 +27,7 @@ SECRET_KEY = '$a*0gggph5wz-o-2w=m)611#^y5eh3yf&03tx)_$%ppm*7ra*x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get("GAE_HOST")]
 
 
 # Application definition
