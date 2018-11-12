@@ -12,7 +12,7 @@ class SpotSetPagination(pagination.PageNumberPagination):
 
 
 class SpotViewSet(viewsets.ModelViewSet):
-    queryset = Spot.objects.all()
+    queryset = Spot.objects.filter(count__gte=15)
     serializer_class = SpotSerializer
     pagination_class = SpotSetPagination
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
