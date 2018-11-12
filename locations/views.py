@@ -11,3 +11,12 @@ class PrefectureViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     ordering_fields = ('id',)
     ordering = ('id',)
+
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_fields = ('prefecture', )
+    ordering_fields = ('id',)
+    ordering = ('id',)
