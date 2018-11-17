@@ -9,10 +9,10 @@ class SpotImageSerializer(serializers.ModelSerializer):
 
 
 class SpotSerializer(serializers.ModelSerializer):
-    # spotimage_set = SpotImageSerializer(read_only=True, many=True)
+    spotimage_set = SpotImageSerializer(read_only=True, many=True)
 
     class Meta:
         model = Spot
-        fields = ('id', 'title', 'url')
+        fields = ('id', 'title', 'url', 'spotimage_set')
         ordering_fields = ('count', '-count',)
         ordering = ('-count',)

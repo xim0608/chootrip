@@ -21,7 +21,7 @@ class SpotSearchFilter(dfr_filters.FilterSet):
 
 
 class SpotViewSet(viewsets.ModelViewSet):
-    queryset = Spot.objects.filter(count__gte=15)
+    queryset = Spot.objects.filter(count__gte=15).prefetch_related("spotimage_set")
     serializer_class = SpotSerializer
     # pagination_class = SpotSetPagination
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
