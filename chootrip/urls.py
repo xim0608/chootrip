@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from recommender.urls import router as recommender_router
+from recommender import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(recommender_router.urls))
+    path('api/recommend/', views.recommend, name='recommend'),
+    path('api/', include(recommender_router.urls)),
 ]
