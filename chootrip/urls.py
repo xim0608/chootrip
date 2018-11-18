@@ -21,5 +21,6 @@ from recommender import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/recommend/', views.recommend, name='recommend'),
+    path('api/topics/', views.topics, name='topics'),
     path('api/', include(recommender_router.urls)),
 ]

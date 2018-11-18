@@ -184,7 +184,7 @@ class Recommend:
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
         return self.topic_model.lda[self.corpus_model.corpus[converted_doc_id]]
 
-    def user_vec(self, spot_ids):
+    def user_vec_list(self, spot_ids):
         user_vector_list = [0] * self.topic_model.lda.num_topics
         # 疎行列をpython list形式に変換する．
         for spot_id in spot_ids:
@@ -194,7 +194,10 @@ class Recommend:
                 direction = element[0]
                 el_magnitude = element[1]
                 user_vector_list[direction] += el_magnitude
+        return user_vector_list
 
+    @classmethod
+    def user_vec_list_to_sparse(cls, user_vector_list):
         # 疎行列に戻す
         sparse_user_vector = []
         for list_index, el_magnitude in enumerate(user_vector_list):

@@ -32,7 +32,7 @@ class SpotViewSet(viewsets.ModelViewSet):
     filter_fields = ('city', 'id', 'title')
     filterset_fields = {
         'city': ('exact', 'in'),
-        'id': ('exact',),
+        'id': ('exact', 'in'),
         'title': ('icontains',),
     }
     ordering_fields = ('count',)
@@ -49,10 +49,17 @@ def recommend(request):
     user_favorite_spot_ids = data['spot_ids']
 
     # 2. ユーザの嗜好ベクトルを生成する
-    user_vec = recommend_model.user_vec(user_favorite_spot_ids)
+    user_vec_list = recommend_model.user_vec_list(user_favorite_spot_ids)
+    sparsed_user_vec = recommend_model.user_vec_list_to_sparse(user_vec_list)
+
+    # 3. 嗜好ベクトルを表示向けに標準化する
+    np_user_vec = np.array(user_vec_list)
+    np_user_vec_mean = np_user_vec.mean(keepdims=True)
+    np_user_vec_std = np.std(np_user_vec, keepdims=True)
+    normalized_user_vec = list((np_user_vec - np_user_vec_mean) / np_user_vec_std)
 
     # 3. Get Nearest Neighbor
-    similarities = recommend_model.index[user_vec]
+    similarities = recommend_model.index[sparsed_user_vec]
 
     # 4. doc_id, 類似度のベクトルをdict型{'spot_id': 類似度}に変換する
     similarities_dict = {}
@@ -64,7 +71,21 @@ def recommend(request):
         similarities_dict[spot_id] = float(simirality)
 
     # 5. 類似度順にソートする(疎ベクトルの形になる)
-    similarities_sorted = sorted(similarities_dict.items(), key=lambda x: -x[1])
+    # similarities_sorted = sorted(similarities_dict.items(), key=lambda x: -x[1])
 
     # 6. 類似度ソートリストと，ユーザ嗜好ベクトルを返す
-    return JsonResponse({'similarities': similarities_sorted, 'user_vec': user_vec})
+    return JsonResponse(
+        {'similarities': similarities_dict, 'user_vec': sparsed_user_vec, 'normalized_user_vec': normalized_user_vec}
+    )
+
+
+def topics(request):
+    topics_dict = {}
+    for i in range(0, recommend_model.topic_model.lda.num_topics):
+        topic = recommend_model.topic_model.lda.show_topic(i)
+        topic = [(term[0], float(term[1])) for term in topic]
+        topics_dict[i] = topic
+
+    return JsonResponse(
+        {'topics': topics_dict}
+    )

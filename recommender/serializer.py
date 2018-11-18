@@ -13,6 +13,6 @@ class SpotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Spot
-        fields = ('id', 'title', 'url', 'spotimage_set')
+        fields = ('id', 'title', 'url', 'count', 'spotimage_set')
         ordering_fields = ('count', '-count',)
         ordering = ('-count',)
