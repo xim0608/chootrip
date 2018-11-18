@@ -75,7 +75,7 @@ def recommend(request):
 
     # 6. 類似度ソートリストと，ユーザ嗜好ベクトルを返す
     return JsonResponse(
-        {'similarities': similarities_dict, 'user_vec': sparsed_user_vec, 'normalized_user_vec': normalized_user_vec}
+        {'similarities': similarities_dict, 'user_vec': user_vec_list, 'normalized_user_vec': normalized_user_vec}
     )
 
 
