@@ -34,20 +34,25 @@ class Corpus:
         # key: spot_id, value: doc_id
         self.id_conversion_table = {}
 
+        # key: doc_id, value: spot_id
+        self.doc_conversion_table = {}
+
         if os.path.isdir(self.dir) and not skip_load:
             self.load_exist_models()
 
     def convert_id(self, spot_id=None, doc_id=None):
         if (spot_id is None and doc_id is None) or (spot_id is not None and doc_id is not None):
             raise ValueError('Specify ONE variable.')
-        if spot_id:
+        if spot_id is not None:
             return self.id_conversion_table.get(spot_id)
-        if doc_id:
+        if doc_id is not None:
             # return dict index
-            for dict_spot_id, dict_doc_id in self.id_conversion_table.items():
-                if dict_doc_id == doc_id:
-                    return int(dict_spot_id)
-            raise ValueError("out of Index")
+            return self.doc_conversion_table.get(doc_id)
+            # improve performance
+            # for dict_spot_id, dict_doc_id in self.id_conversion_table.items():
+            #     if dict_doc_id == doc_id:
+            #         return int(dict_spot_id)
+        raise ValueError("out of Index")
 
     def extract_words_from_json(self):
         # get latest dumped files
@@ -105,6 +110,7 @@ class Corpus:
         self.corpus = corpora.MmCorpus(self.dir + 'cop.mm')
         with open(self.dir + "id_conversion_table.pickle", mode='rb') as f:
             self.id_conversion_table = pickle.load(f)
+        self.doc_conversion_table = {v: k for k, v in self.id_conversion_table.items()}
 
     def create(self):
         if os.path.isdir(self.dir):
@@ -177,6 +183,23 @@ class Recommend:
     def get_vec(self, spot_id):
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
         return self.topic_model.lda[self.corpus_model.corpus[converted_doc_id]]
+
+    def user_vec(self, spot_ids):
+        user_vector_list = [0] * self.topic_model.lda.num_topics
+        # 疎行列をpython list形式に変換する．
+        for spot_id in spot_ids:
+            # get spot vec
+            spot_vector = self.get_vec(spot_id)
+            for element in spot_vector:
+                direction = element[0]
+                el_magnitude = element[1]
+                user_vector_list[direction] += el_magnitude
+
+        # 疎行列に戻す
+        sparse_user_vector = []
+        for list_index, el_magnitude in enumerate(user_vector_list):
+            sparse_user_vector.append((list_index, el_magnitude))
+        return sparse_user_vector
 
     def get_spot_topic_words(self, spot_id):
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
