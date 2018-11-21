@@ -3,5 +3,9 @@ nouns:
   extract_words_method: extract_neologd_nouns
   no_below: 2
   no_above: 0.3
-
-
+nouns_without_en_stop_words:
+  # 大元のstopwordに英語のものを加えた
+  morphological_analysis: neologd
+  extract_words_method: extract_neologd_nouns
+  no_below: 2
+  no_above: 0.3

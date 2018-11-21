@@ -1,5 +1,7 @@
 import re
 import urllib
+import nltk.corpus import stopwords as nltk_stopwords
+
 
 
 def include_num(word):
@@ -18,6 +20,7 @@ def __get_sloth_lib_stop_words():
 def get_stop_words():
     stopwords = ['\n', '、', '「', '」', '（', '）']
     stopwords += __get_sloth_lib_stop_words()
+    stopwords += nltk_stopwords.words('english')
     print('created stopwords_list')
     return stopwords
 
