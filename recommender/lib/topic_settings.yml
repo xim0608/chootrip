@@ -7,3 +7,12 @@ noun_40:
 noun_50:
   corpus: nouns
   num_topics: 40
+noun_30_v2:
+  corpus: nouns_without_en_stop_words
+  num_topics: 30
+noun_40_v2:
+  corpus: nouns_without_en_stop_words
+  num_topics: 40
+noun_50_v2:
+  corpus: nouns_without_en_stop_words
+  num_topics: 50
