@@ -1,7 +1,6 @@
 import re
 import urllib
-import nltk.corpus import stopwords as nltk_stopwords
-
+from nltk.corpus import stopwords as nltk_stopwords
 
 
 def include_num(word):
