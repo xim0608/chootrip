@@ -16,6 +16,6 @@ noun_40_v2:
 noun_50_v2:
   corpus: nouns_without_en_stop_words
   num_topics: 50
-noun_and_adjective_30:
-  corpus: noun_and_adjective
+nouns_and_adjectives_30:
+  corpus: nouns_and_adjectives
   num_topics: 30
