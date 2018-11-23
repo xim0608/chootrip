@@ -37,7 +37,7 @@ def extract_neologd_nouns(review):
     return review_words
 
 
-def extract_adjectives_and_nouns(review):
+def extract_nouns_and_adjectives(review):
     review_words = []
     for node_with_feature in review:
         if not include_num(node_with_feature[6]) and not node_with_feature[6] in stopwords:
