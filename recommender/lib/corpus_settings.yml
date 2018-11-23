@@ -9,3 +9,8 @@ nouns_without_en_stop_words:
   extract_words_method: extract_neologd_nouns
   no_below: 2
   no_above: 0.3
+nouns_and_adjectives:
+  morphological_analysis: neologd
+  extract_words_method: extract_nouns_and_adjectives
+  no_below: 2
+  no_above: 0.3

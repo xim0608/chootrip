@@ -35,3 +35,18 @@ def extract_neologd_nouns(review):
                     (node_with_feature[1] == '固有名詞' and not node_with_feature[2] == '人名' and not node_with_feature[2] == '地域'):
                 review_words.append(node_with_feature[6])
     return review_words
+
+
+def extract_adjectives_and_nouns(review):
+    review_words = []
+    for node_with_feature in review:
+        if not include_num(node_with_feature[6]) and not node_with_feature[6] in stopwords:
+            if node_with_feature[0] == '名詞':
+                if node_with_feature[1] == '一般' or node_with_feature[1] == 'サ変接続' or \
+                    (node_with_feature[1] == '固有名詞' and not node_with_feature[2] == '人名' and not node_with_feature[
+                                                                                                     2] == '地域'):
+                    review_words.append(node_with_feature[6])
+            elif node_with_feature[0] == '形容詞':
+                if node_with_feature[1] == '自立':
+                    review_words.append(node_with_feature[6])
+    return review_words
