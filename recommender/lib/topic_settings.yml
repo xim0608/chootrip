@@ -19,3 +19,9 @@ noun_50_v2:
 nouns_and_adjectives_30:
   corpus: nouns_and_adjectives
   num_topics: 30
+nouns_and_adjectives_40:
+  corpus: nouns_and_adjectives
+  num_topics: 40
+nouns_and_adjectives_50:
+  corpus: nouns_and_adjectives
+  num_topics: 50
