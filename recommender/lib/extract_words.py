@@ -20,6 +20,7 @@ def get_stop_words():
     stopwords = ['\n', '、', '「', '」', '（', '）']
     stopwords += __get_sloth_lib_stop_words()
     stopwords += nltk_stopwords.words('english')
+    stopwords += list(map(lambda w: w.upper(), nltk_stopwords.words('english')))
     print('created stopwords_list')
     return stopwords
 
