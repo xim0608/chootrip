@@ -134,6 +134,7 @@ class TopicModel:
         self.dir = settings.BASE_DIR + "/recommender/lib/files/topic_model/{}/".format(name)
         self.corpus_model = Corpus(self.settings['corpus'])
         self.num_topics = int(self.settings['num_topics'])
+        self.alpha = self.settings.get('alpha')
         self.lda = None
         if os.path.isdir(self.dir) and not skip_load:
             self.load_exist_models()
@@ -182,7 +183,7 @@ class Recommend:
 
     def get_vec(self, spot_id):
         converted_doc_id = self.corpus_model.convert_id(spot_id=spot_id)
-        return self.topic_model.lda[self.corpus_model.corpus[converted_doc_id]]
+        return self.topic_model.lda.get_document_topics(self.corpus_model.corpus[converted_doc_id], minimum_probability=0)
 
     def user_vec_list(self, spot_ids):
         user_vector_list = [0] * self.topic_model.lda.num_topics

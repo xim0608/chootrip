@@ -17,11 +17,38 @@ noun_50_v2:
   corpus: nouns_without_en_stop_words
   num_topics: 50
 nouns_and_adjectives_30:
+  # alpha 0.034
   corpus: nouns_and_adjectives
   num_topics: 30
 nouns_and_adjectives_40:
+  # alpha: 0.025
   corpus: nouns_and_adjectives
   num_topics: 40
 nouns_and_adjectives_50:
+  # alpha: 0.02
+  corpus: nouns_and_adjectives
+  num_topics: 50
+nouns_and_adjectives_30_alpha_0.05:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 30
+nouns_and_adjectives_30_alpha_0.1:
+  alpha: 0.1
+  corpus: nouns_and_adjectives
+  num_topics: 30
+nouns_and_adjectives_40_alpha_0.05:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 30
+nouns_and_adjectives_40_alpha_0.1:
+  alpha: 0.1
+  corpus: nouns_and_adjectives
+  num_topics: 30
+nouns_and_adjectives_50_alpha_0.05:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 50
+nouns_and_adjectives_50_alpha_0.1:
+  alpha: 0.1
   corpus: nouns_and_adjectives
   num_topics: 50
