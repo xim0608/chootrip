@@ -68,3 +68,15 @@ nouns_and_adjectives_35_alpha_0.1:
   alpha: 0.1
   corpus: nouns_and_adjectives
   num_topics: 35
+nouns_and_adjectives_31:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 31
+nouns_and_adjectives_32:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 32
+nouns_and_adjectives_33:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 33
