@@ -39,7 +39,7 @@ class SpotViewSet(viewsets.ModelViewSet):
     ordering = ('-count',)
 
 
-topic_model = TopicModel('noun_30')
+topic_model = TopicModel('nouns_and_adjectives_40_alpha_0.05')
 recommend_model = Recommend(topic_model)
 
 
