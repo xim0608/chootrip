@@ -25,7 +25,10 @@ dotenv.read_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = '$a*0gggph5wz-o-2w=m)611#^y5eh3yf&03tx)_$%ppm*7ra*x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get("DEBUG"):
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = [os.environ.get("GAE_HOST")]
 
