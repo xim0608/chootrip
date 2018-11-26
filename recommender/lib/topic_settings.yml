@@ -52,3 +52,11 @@ nouns_and_adjectives_50_alpha_0.1:
   alpha: 0.1
   corpus: nouns_and_adjectives
   num_topics: 50
+nouns_and_adjectives_40_alpha_0.05_fix:
+  alpha: 0.05
+  corpus: nouns_and_adjectives
+  num_topics: 40
+nouns_and_adjectives_40_alpha_0.1_fix:
+  alpha: 0.1
+  corpus: nouns_and_adjectives
+  num_topics: 40
